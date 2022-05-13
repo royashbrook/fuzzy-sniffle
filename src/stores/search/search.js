@@ -16,15 +16,17 @@ export const getSearchResults = async (searchString) => {
   const key = connectionString.match(/AccountKey=([^;]*);/)[1]
   const databaseId = secrets.cosmosDatabase
   const containerId = secrets.cosmosContainer
-  const qry = {
-    query: secrets.cosmosQuery,
-    parameters: [
-      {
-        name: "@p1",
-        value: `%${searchString}%`
-      }
-    ]
-  };
+  const qry = searchString
+    //secrets.cosmosQuery
+  // {
+  //   query: "select top 10 * from c where c['72'] in ('4', '6', '33', '5') and c['70'] like '2018%' and c['74'] <> '' and @p1 = @p1",
+  //   parameters: [
+  //     {
+  //       name: "@p1",
+  //       value: `%${searchString}%`
+  //     }
+  //   ]
+  // };
 
   //create client
   const client = new CosmosClient({ endpoint, key })

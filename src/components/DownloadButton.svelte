@@ -4,7 +4,10 @@
   const secrets = $data
   const storageURI = secrets.storageURI
   const storageSAS = secrets.storageSAS
-  const href = `${storageURI}${searchResult.filename}${storageSAS}`
+  const f = searchResult['74']
+  const fileName = [f.substring(0, 3), f.substring(3, 6), f].join('/')
+  //todo: update config to include container
+  const href = `${storageURI}${fileName}${storageSAS}`
 </script>
 
 <style>
@@ -14,5 +17,5 @@
 </style>
 
 <a target="_blank" {href}>
-  <button>{searchResult.filename}</button>
+  <button>{f}</button>
 </a>
