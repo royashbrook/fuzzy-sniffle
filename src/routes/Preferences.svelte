@@ -1,129 +1,43 @@
 <script>
-  import { quintOut } from 'svelte/easing'
-  import { crossfade } from 'svelte/transition'
-  import { fade } from 'svelte/transition';
-  import {
-    preferences,
-    resetPreferences,
-  } from '../stores/preferences/preferences'
+  import { preferences, resetPreferences, setPreference } from '../stores/preferences/preferences'
+  import matchTypes from '../stores/preferences/matchTypes'
+  import docTypes from '../stores/preferences/docTypes'
 
-  const [send, receive] = crossfade({
-    duration: (d) => Math.sqrt(d * 300),
-
-    fallback(node, params) {
-      const style = getComputedStyle(node)
-      const transform = style.transform === 'none' ? '' : style.transform
-
-      return {
-        duration: 600,
-        easing: quintOut,
-        css: (t) => `
-					transform: ${transform} scale(${t});
-					opacity: ${t}
-				`,
-      }
-    },
-  })
-
-  let todos = $preferences.map((x) => ({
-    id: x.id,
-    done: x.selected,
-    description: x.name,
-  }))
-
-  function remove(todo) {
-    todos = todos.filter((t) => t !== todo)
-  }
-
-  function mark(todo, done) {
-    todo.done = done
-    remove(todo)
-    todos = todos.concat(todo)
-    $preferences = todos.map((x) => ({
-      id: x.id,
-      selected: x.done,
-      name: x.description,
-    }))
-  }
-
-  function reset() {
-    resetPreferences()
-
-    todos = $preferences.map((x) => ({
-      id: x.id,
-      done: x.selected,
-      description: x.name,
-    }))
-  }
 </script>
 
-<style>
-  .board {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1em;
-    max-width: 36em;
-    margin: 0 auto;
-  }
+<p>These options change which fields you can search by, what kind of match is used for those fields, and which document types you return in your searches. You can hit the <code>Reset Preferences</code> button to reset to a base/default. Settings will be saved in your browser so you will not have to reset them every time you search.</p>
+<p>Please note that all searches are case-sensitive and regardless of whether or not a field is set to 'Show' it will only appear in the search results if it has data in it. Blank values will be omitted from the output.</p>
+<button on:click={resetPreferences}>Reset Preferences</button>
 
-  h2 {
-    font-size: 2em;
-    font-weight: 200;
-    user-select: none;
-    margin: 0 0 0.5em 0;
-  }
-
-  label {
-    display: block;
-    position: relative;
-    line-height: 1.2;
-    padding: 0.5em 2.5em 0.5em 2em;
-    margin: 0 0 0.5em 0;
-    border-radius: 2px;
-    user-select: none;
-    border: 1px solid hsl(240, 8%, 70%);
-    background-color: hsl(240, 8%, 93%);
-    color: #333;
-  }
-
-  input[type='checkbox'] {
-    position: absolute;
-    left: 0.5em;
-    top: 0.6em;
-    margin: 0;
-  }
-
-  .done {
-    border: 1px solid hsl(240, 8%, 90%);
-    background-color: hsl(240, 8%, 98%);
-  }
-  
-</style>
-
-<div class="board">
-
-  <div class="left">
-    <h2>Unused</h2>
-    {#each todos.filter((t) => !t.done) as todo (todo.id)}
-      <label in:receive={{ key: todo.id }} out:send={{ key: todo.id }}>
-        <input type="checkbox" on:change={() => mark(todo, true)} />
-        {todo.description}
-      </label>
+{#if $preferences}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Field Name</th>
+      <th>Search</th>
+      <th>Match</th>
+      <th>Show</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each $preferences as r}
+      <tr>
+        <td>{r.id}</td>
+        <td>{r.name}</td>
+        <td style="text-align:center;">
+          <input type="checkbox" bind:checked={r.search} on:click={()=>setPreference(r.id,"search",!r.search)} />
+        </td>
+        <td>
+          <select style="width:100%;" bind:value={r.match}>
+            {#each matchTypes as m}
+            <option value={m.value} selected>{m.text}</option>
+            {/each}
+          </select>
+        </td>
+        <td style="text-align:center;"><input type="checkbox" bind:checked={r.show} on:click={()=>setPreference(r.id,"show",!r.show)} /></td>
+      </tr>
     {/each}
-  </div>
-
-  <div class="right">
-    <h2>Selected</h2>
-    {#each todos.filter((t) => t.done) as todo (todo.id)}
-      <label
-        class="done"
-        in:receive={{ key: todo.id }}
-        out:send={{ key: todo.id }}>
-        <input type="checkbox" checked on:change={() => mark(todo, false)} />
-        {todo.description}
-      </label>
-    {/each}
-    <button transition:fade on:click={reset}>Reset Preferences</button>
-  </div>
-
-</div>
+  </tbody>
+</table>
+{/if}

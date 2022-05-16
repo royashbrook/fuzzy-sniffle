@@ -1,30 +1,32 @@
 <script>
   export let searchResult
   import DownloadButton from './DownloadButton.svelte'
-  import { fade } from 'svelte/transition';
-  import { docProps } from '../stores/preferences/preferences'
+  import docProps from '../stores/preferences/docProps'
   const propKeyToName = k => docProps.find(x=>x.id == k)?.name
 </script>
 
-<div transition:fade>
+<div class="zoom">
   {#each Object.keys(searchResult) as key}
   {#if propKeyToName(key)}
   <b>{propKeyToName(key)}</b>: {searchResult[key]}<br />
   {/if}
     
   {/each}
-  <!-- <pre>{JSON.stringify(searchResult, null, 2)}</pre> -->
   <DownloadButton {searchResult} />
 </div>
 
 <style>
   div {
     display:inline-block;
-    font-size:xx-small;
-    margin:0.25rem;
+    font-size:x-small;
+    padding: 1rem;
+    background-color: #f5f7ff;
+    transition: transform .2s; /* Animation */
+    margin: 0.25rem;
   }
-  pre {
-    width:10rem;
-    height:10rem;
-  }
+  div:hover {
+    border: 1px solid grey;
+    transform: scale(2.0);
+}
+
 </style>
