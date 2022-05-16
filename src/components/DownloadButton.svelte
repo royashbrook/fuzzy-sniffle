@@ -11,11 +11,13 @@
 </script>
 
 <style>
-  button {
-    width: 100%;
+  div {
+    width: 12rem;
   }
 </style>
 
-<a target="_blank" {href}>
-  <button>{f}</button>
-</a>
+<div>
+  <a target="_blank" {href}>Download
+  </a>
+</div>
+

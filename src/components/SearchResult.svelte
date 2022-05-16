@@ -2,10 +2,18 @@
   export let searchResult
   import DownloadButton from './DownloadButton.svelte'
   import { fade } from 'svelte/transition';
+  import docProps from '../stores/preferences/DocumentProperties.json'
+  const propKeyToName = k => docProps.find(x=>x.id == k)?.name
 </script>
 
 <div transition:fade>
-  <pre>{JSON.stringify(searchResult, null, 2)}</pre>
+  {#each Object.keys(searchResult) as key}
+  {#if propKeyToName(key)}
+  <b>{propKeyToName(key)}</b>: {searchResult[key]}<br />
+  {/if}
+    
+  {/each}
+  <!-- <pre>{JSON.stringify(searchResult, null, 2)}</pre> -->
   <DownloadButton {searchResult} />
 </div>
 
