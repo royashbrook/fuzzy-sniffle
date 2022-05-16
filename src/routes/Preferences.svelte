@@ -1,13 +1,14 @@
 <script>
   import { quintOut } from 'svelte/easing'
   import { crossfade } from 'svelte/transition'
+  import { fade } from 'svelte/transition';
   import {
     preferences,
     resetPreferences,
   } from '../stores/preferences/preferences'
 
   const [send, receive] = crossfade({
-    duration: (d) => Math.sqrt(d * 200),
+    duration: (d) => Math.sqrt(d * 300),
 
     fallback(node, params) {
       const style = getComputedStyle(node)
@@ -122,7 +123,7 @@
         {todo.description}
       </label>
     {/each}
-    <button on:click={reset}>Reset Preferences</button>
+    <button transition:fade on:click={reset}>Reset Preferences</button>
   </div>
 
 </div>

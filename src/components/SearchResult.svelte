@@ -2,7 +2,7 @@
   export let searchResult
   import DownloadButton from './DownloadButton.svelte'
   import { fade } from 'svelte/transition';
-  import docProps from '../stores/preferences/DocumentProperties.json'
+  import { docProps } from '../stores/preferences/preferences'
   const propKeyToName = k => docProps.find(x=>x.id == k)?.name
 </script>
 

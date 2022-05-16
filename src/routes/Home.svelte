@@ -8,7 +8,7 @@
   let error = false
   const handleChange = async (e) => {
     
-    let list = ['lower(c["74"]) like "%.%"']
+    let list = ['c["74"] <> ""']
     let inputs = document
       .querySelectorAll('input')
       .forEach( input => {
