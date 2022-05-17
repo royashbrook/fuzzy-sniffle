@@ -5,8 +5,16 @@
   import { preferences } from '../stores/preferences/preferences'
   import SearchResults from '../components/SearchResults.svelte'
   import Spinner from '../components/Spinner.svelte'
+  
   let searching = false
   let error = false
+
+  let mypref, upperCase, docs, props
+  $: upperCase = $preferences.upperCase
+  $: docs = $preferences.docs
+  $: props = $preferences.props
+  $: mypref = props.filter((x) => x.search)
+
   const handleChange = async (e) => {
     console.table($preferences)
 
@@ -14,10 +22,10 @@
     let sql = ['select top 15']
 
     //set fields to select
-    let fields = ['c["74"]']
+    let fields = ['c["74"]','c["72"]']
 
     //push any additional show fields to our sql
-    $preferences
+    $preferences.props
       .filter((x) => x.show)
       .forEach((x) => fields.push(`c["${x.id}"]`))
 
@@ -28,10 +36,10 @@
     sql.push('from c where')
 
     //set base conditions
-    let conditions = ['c["74"] <> ""']
+    let conditions = ['c["74"] <> ""','c["72"] <> ""']
 
-    //push conditions defined by user, use params
-    let userprefs = $preferences
+    //get prefs defined by user
+    let userprefs = $preferences.props
       .filter((x) => x.search)
       .filter((x) => x.value !== '')
       .map((x) => ({
@@ -40,20 +48,29 @@
         val: x.match.replace('=',x.value),
       }))
 
-    
-      userprefs.forEach((x) => {
-        conditions.push(`c["${x.id}"] ${x.op} @p${x.id}`)
-      })
+    //push conditions based on user prefs
+    userprefs.forEach((x) => {
+      conditions.push(`c["${x.id}"] ${x.op} @p${x.id}`)
+    })
 
-    //push conditions to our sql
-    sql.push(conditions.join(' and '))
 
-    //define our parameter values for the cosmos query
+    //define param values based on user prefs
     let params = userprefs
       .map((x) => ({
         name: `@p${x.id}`,
-        value: x.val
+        value: upperCase ? x.val.toUpperCase() : x.val
       }))
+
+    //add param and conditions for doc type filter
+    let docTypes = $preferences.docs
+      .filter((x) => x.show)
+    if (docTypes.length > 0) {
+      conditions.push(`c["72"] in (${docTypes.map(x=>`"${x.id}"`).join(',')})`)
+      // params.push({ name: '@p72', value: docTypes.map(x=>`"${x.id}"`).join(',') })
+    }
+
+    //push conditions to our sql
+    sql.push(conditions.join(' and '))
 
     //create our query object to pass to cosmos
     let query = {
@@ -71,8 +88,7 @@
       })
   }
 
-  let mypref
-  $: mypref = $preferences.filter((x) => x.search)
+
 </script>
 
 {#each mypref as p}
