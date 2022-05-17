@@ -23,6 +23,6 @@ export const getSearchResults = async (qry) => {
     .query(qry)
     .fetchAll()
     .then(({ resources: items }) => searchResults.set(items))
-    .catch((err) => console.log('error', err.message))
+    .catch((err) => console.error(err))
 
 }

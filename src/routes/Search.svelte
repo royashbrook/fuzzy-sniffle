@@ -16,7 +16,6 @@
   $: mypref = props.filter((x) => x.search)
 
   const handleChange = async (e) => {
-    console.table($preferences)
 
     //set base query
     let sql = ['select top 15']
@@ -84,7 +83,7 @@
       .catch((err) => {
         searching = false
         error = true
-        console.log(err)
+        console.error(err)
       })
   }
 
