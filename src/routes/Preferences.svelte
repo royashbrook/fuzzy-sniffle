@@ -1,5 +1,5 @@
 <script>
-  import { preferences, resetPreferences, setPreference } from '../stores/preferences/preferences'
+  import { preferences, resetPreferences } from '../stores/preferences/preferences'
   import matchTypes from '../stores/preferences/matchTypes'
 
   let upperCase, props, doc
@@ -49,7 +49,7 @@
           <td>{r.id}</td>
           <td>{r.name}</td>
           <td style="text-align:center;">
-            <input type="checkbox" bind:checked={r.search} on:click={()=>setPreference(r.id,"search",!r.search)} />
+            <input type="checkbox" bind:checked={r.search} />
           </td>
           <td>
             <select style="width:100%;" bind:value={r.match}>
@@ -58,7 +58,7 @@
               {/each}
             </select>
           </td>
-          <td style="text-align:center;"><input type="checkbox" bind:checked={r.show} on:click={()=>setPreference(r.id,"show",!r.show)} /></td>
+          <td style="text-align:center;"><input type="checkbox" bind:checked={r.show} /></td>
         </tr>
       {/each}
     </tbody>

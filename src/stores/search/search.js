@@ -5,10 +5,7 @@ import { CosmosClient } from '@azure/cosmos'
 export const searchResults = writable(null);
 
 export const getSearchResults = async (qry) => {
-console.log(qry)
-  //empty search results
-  searchResults.set(null);
-
+  
   //get cosmos settings and set query
   const secrets = get(data)
   const endpoint = secrets.cosmosURI
