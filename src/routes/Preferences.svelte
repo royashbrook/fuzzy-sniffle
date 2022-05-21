@@ -25,7 +25,7 @@
   <summary>Document Types</summary>
   <p>Choose document types you'd like to return in your queries.</p>
   {#each docs as d}
-    <button style="margin: 0.25rem;{d.show?'color:lightgreen;':''}" id={d.id}>{d.name}</button>
+    <input type="checkbox" bind:checked={d.show} />{d.name}<br />
   {/each}
 </details>
 
