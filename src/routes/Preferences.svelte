@@ -2,10 +2,6 @@
   import { preferences, resetPreferences } from '../stores/preferences/preferences'
   import matchTypes from '../stores/preferences/matchTypes'
 
-  let upperCase, props, doc
-  $: upperCase = $preferences.upperCase
-  $: props = $preferences.props
-  $: docs = $preferences.docs
 </script>
 
 {#if $preferences}
@@ -18,13 +14,13 @@
 <details>
   <summary>Case Sensitivity</summary>
   <p>All searches are case sensitive. Typically, most text data in this system is upper case, so all text entered into the search boxes will be converted to upper case before it is sent to the server for searching. If you'd like to disable that behavior, uncheck the box below.</p>
-  <input type="checkbox" bind:checked={upperCase} on:click={()=> {$preferences.upperCase = !upperCase}} />Convert all search terms to upper case
+  <input type="checkbox" bind:checked={$preferences.upperCase} />Convert all search terms to upper case
 </details>
 
 <details>
   <summary>Document Types</summary>
   <p>Choose document types you'd like to return in your queries.</p>
-  {#each docs as d}
+  {#each $preferences.docs as d}
     <input type="checkbox" bind:checked={d.show} />{d.name}<br />
   {/each}
 </details>
@@ -44,7 +40,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each props as r}
+      {#each $preferences.props as r}
         <tr>
           <td>{r.id}</td>
           <td>{r.name}</td>
