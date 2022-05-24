@@ -7,6 +7,7 @@ export const preferences = writable(
     : defaultPrefs);
 
 preferences.subscribe(val =>
-  localStorage.setItem("preferences", JSON.stringify(val)));
+  localStorage.preferences = JSON.stringify(val));
 
-export const resetPreferences = () => preferences.set(defaultPrefs);
+export const resetPreferences = () =>
+  preferences.set(defaultPrefs);
