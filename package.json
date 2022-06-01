@@ -8,7 +8,7 @@
     "test": "echo \"This template does not include a test runner by default.\" && exit 1"
   },
   "devDependencies": {
-    "@azure/cosmos": "^3.15.1",
+    "@azure/cosmos": "^3.16.1",
     "@azure/msal-browser": "^2.23.0",
     "@snowpack/plugin-svelte": "^3.7.0",
     "lz-string": "^1.4.4",
